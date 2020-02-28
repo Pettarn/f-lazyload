@@ -7,11 +7,13 @@
     <style>
         body {
             position: relative;
-
+            height: 1500px;
         }
         .image {
             position: absolute;
-            top: 10000px;
+            height: 100px;
+            width: 300px;
+            top: 1000px;
         }
     </style>
 </head>
@@ -21,11 +23,10 @@
     <img class="image" src="" data-origin="./assets/tu5.jpg" /> -->
     <script>
         let imgList = document.querySelectorAll("img[data-origin]")
-        console.log(imgList)
         
         // 节流函数
         function throttle (func, timeout) {
-            let flag = 0
+            let flag = 1
             return function () {
                 if (flag) {
                     flag = 0
@@ -36,13 +37,14 @@
                 }
             }
         }
-
+        
         let lazyLoad = () => {
             for (let i = 0; i < imgList.length; i++) {
                 let elem = imgList[i]
-                let Y = elem.getBoundingClientRect().top + document.body.scrollTop
-                let limit = document.body.scrollTop + document.body.clientHeight
+                let Y = elem.offsetTop
+                let limit = document.documentElement.scrollTop + document.documentElement.clientHeight
                 let url = elem.getAttribute('data-origin')
+                console.log(Y, limit)
                 if (Y < limit) {
                     elem.src = url
                 }
