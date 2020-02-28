@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            position: relative;
+
+        }
+        .image {
+            position: absolute;
+            top: 10000px;
+        }
+    </style>
+</head>
+<body>
+    <img class="image" src="" data-origin="./assets/tu3.jpg" />
+    <!-- <img class="image" src="" data-origin="./assets/tu4.jpg" />
+    <img class="image" src="" data-origin="./assets/tu5.jpg" /> -->
+    <script>
+        let imgList = document.querySelectorAll("img[data-origin]")
+        console.log(imgList)
+        
+        // 节流函数
+        function throttle (func, timeout) {
+            let flag = 0
+            return function () {
+                if (flag) {
+                    flag = 0
+                    setTimeout(() => {
+                        func()
+                        flag = 1
+                    }, timeout)
+                }
+            }
+        }
+
+        let lazyLoad = () => {
+            for (let i = 0; i < imgList.length; i++) {
+                let elem = imgList[i]
+                let Y = elem.getBoundingClientRect().top + document.body.scrollTop
+                let limit = document.body.scrollTop + document.body.clientHeight
+                let url = elem.getAttribute('data-origin')
+                if (Y < limit) {
+                    elem.src = url
+                }
+            }
+        }
+
+        lazyLoad = throttle(lazyLoad, 100)
+        
+        window.addEventListener('scroll', function () {
+            lazyLoad()
+        })
+    </script>
+</body>
+</html>
